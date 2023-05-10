@@ -15,14 +15,16 @@ var services = new ServiceCollection();
 
 services.AddOptions();
 
-services.AddTransient<Service>();
+services.AddScoped<Service>();
 services.Configure<ServiceOptions>(configuration);
 
 var sp = services.BuildServiceProvider();
 
 while (true)
 {
-    var svc = sp.GetRequiredService<Service>();
+    using var scope = sp.CreateScope();
+
+    var svc = scope.ServiceProvider.GetRequiredService<Service>();
 
     svc.PrintValue();
 
